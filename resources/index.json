@@ -1,0 +1,16 @@
+{
+    "functions": {
+        "authorizer": "${self:custom.stackPrefix}-authorizer",
+        "createScope": "${self:custom.stackPrefix}-createScope",
+        "getScope": "${self:custom.stackPrefix}-getScope",
+        "deleteScopeById": "${self:custom.stackPrefix}-deleteScopeById",
+        "updateScopeById": "${self:custom.stackPrefix}-updateScopeById",
+        "createClient": "${self:custom.stackPrefix}-createClient",
+        "getClient": "${self:custom.stackPrefix}-getClient",
+        "deleteClientById": "${self:custom.stackPrefix}-deleteClientById",
+        "updateClientById": "${self:custom.stackPrefix}-updateClientById"
+    },
+    "tables": {
+        "clientsScopesTable": "${self:custom.stackPrefix}-clientsScopesTable"
+    }
+}

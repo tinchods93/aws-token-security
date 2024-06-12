@@ -1,0 +1,63 @@
+createClient:
+  handler: src/infrastructure/primary/handlers/clients/createClient.handler
+  description: 'Create a new client.'
+  name: ${file(resources/index.json):functions.createClient}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.createClient}
+  iamRoleStatements: ${file(resources/iamRoleStatements/createScope.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /clients
+        method: post
+        # cors: true
+
+deleteClientById:
+  handler: src/infrastructure/primary/handlers/clients/deleteClient.handler
+  description: 'Deletes an existing client.'
+  name: ${file(resources/index.json):functions.deleteClientById}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.deleteClientById}
+  iamRoleStatements: ${file(resources/iamRoleStatements/deleteClientById.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /clients/{clientId}
+        method: delete
+        # cors: true
+
+getClient:
+  handler: src/infrastructure/primary/handlers/clients/getClient.handler
+  description: 'Gets a client by id or name'
+  name: ${file(resources/index.json):functions.getClient}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.getClient}
+  iamRoleStatements: ${file(resources/iamRoleStatements/getClient.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /clients
+        method: get
+        # cors: true
+
+updateClientById:
+  handler: src/infrastructure/primary/handlers/clients/updateClient.handler
+  description: 'Updates a client.'
+  name: ${file(resources/index.json):functions.updateClientById}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.updateClientById}
+  iamRoleStatements: ${file(resources/iamRoleStatements/updateClientById.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /clients/{clientId}
+        method: put
+        # cors: true

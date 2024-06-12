@@ -1,0 +1,63 @@
+createScope:
+  handler: src/infrastructure/primary/handlers/scopes/createScope.handler
+  description: 'Create a new scope.'
+  name: ${file(resources/index.json):functions.createScope}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.createScope}
+  iamRoleStatements: ${file(resources/iamRoleStatements/createScope.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /scopes
+        method: post
+        # cors: true
+
+deleteScopeById:
+  handler: src/infrastructure/primary/handlers/scopes/deleteScope.handler
+  description: 'Deletes an existing scope.'
+  name: ${file(resources/index.json):functions.deleteScopeById}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.deleteScopeById}
+  iamRoleStatements: ${file(resources/iamRoleStatements/deleteScopeById.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /scopes/{scopeId}
+        method: delete
+        # cors: true
+
+getScope:
+  handler: src/infrastructure/primary/handlers/scopes/getScope.handler
+  description: 'Gets a scope by id or name'
+  name: ${file(resources/index.json):functions.getScope}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.getScope}
+  iamRoleStatements: ${file(resources/iamRoleStatements/getScope.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /scopes
+        method: get
+        # cors: true
+
+updateScopeById:
+  handler: src/infrastructure/primary/handlers/scopes/updateScope.handler
+  description: 'Updates a scope.'
+  name: ${file(resources/index.json):functions.updateScopeById}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.updateScopeById}
+  iamRoleStatements: ${file(resources/iamRoleStatements/updateScopeById.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /scopes/{scopeId}
+        method: put
+        # cors: true
