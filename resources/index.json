@@ -8,7 +8,8 @@
         "createClient": "${self:custom.stackPrefix}-createClient",
         "getClient": "${self:custom.stackPrefix}-getClient",
         "deleteClientById": "${self:custom.stackPrefix}-deleteClientById",
-        "updateClientById": "${self:custom.stackPrefix}-updateClientById"
+        "updateClientById": "${self:custom.stackPrefix}-updateClientById",
+        "createToken": "${self:custom.stackPrefix}-createToken"
     },
     "tables": {
         "clientsScopesTable": "${self:custom.stackPrefix}-clientsScopesTable"

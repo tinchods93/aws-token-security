@@ -6,13 +6,16 @@ createClient:
   logRetentionInDays: 14
   iamRoleStatementsInherit: true
   iamRoleStatementsName: ${file(resources/index.json):functions.createClient}
-  iamRoleStatements: ${file(resources/iamRoleStatements/createScope.yml)}
+  iamRoleStatements: ${file(resources/iamRoleStatements/createClient.yml)}
   provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
   events:
     - http:
         path: /clients
         method: post
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 deleteClientById:
   handler: src/infrastructure/primary/handlers/clients/deleteClient.handler
@@ -28,7 +31,10 @@ deleteClientById:
     - http:
         path: /clients/{clientId}
         method: delete
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 getClient:
   handler: src/infrastructure/primary/handlers/clients/getClient.handler
@@ -44,7 +50,10 @@ getClient:
     - http:
         path: /clients
         method: get
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 updateClientById:
   handler: src/infrastructure/primary/handlers/clients/updateClient.handler
@@ -60,4 +69,7 @@ updateClientById:
     - http:
         path: /clients/{clientId}
         method: put
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }

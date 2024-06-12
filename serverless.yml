@@ -4,6 +4,7 @@ configValidationMode: off
 frameworkVersion: '>=3'
 
 custom:
+  config: ${file(config/index.js)}
   stackPrefix: ${self:service}-${self:provider.stage}
 
   # Prune
@@ -47,6 +48,8 @@ provider:
     LOG_LEVEL: DEBUG
     OWNER_PROJECT_NAME: 'Protoprime'
     CLIENTS_SCOPE_TABLE_NAME: ${file(resources/index.json):tables.clientsScopesTable}
+    JWT_SECRET: 'test-secret'
+    JWT_EXPIRATION_TIME: 3600
 
 package:
   individually: false
@@ -63,8 +66,9 @@ plugins:
 
 resources:
   - ${file(resources/tables/table.yml)}
-  # - ${file(resources/authorizer/authorizer.yml)}
+  - ${file(resources/apiGateway/authorizer.yml)}
 
 functions:
   - ${file(src/clients.yml)}
   - ${file(src/scopes.yml)}
+  - ${file(src/tokens.yml)}

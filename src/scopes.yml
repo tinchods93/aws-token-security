@@ -12,7 +12,10 @@ createScope:
     - http:
         path: /scopes
         method: post
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 deleteScopeById:
   handler: src/infrastructure/primary/handlers/scopes/deleteScope.handler
@@ -28,7 +31,10 @@ deleteScopeById:
     - http:
         path: /scopes/{scopeId}
         method: delete
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 getScope:
   handler: src/infrastructure/primary/handlers/scopes/getScope.handler
@@ -44,7 +50,10 @@ getScope:
     - http:
         path: /scopes
         method: get
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }
 
 updateScopeById:
   handler: src/infrastructure/primary/handlers/scopes/updateScope.handler
@@ -60,4 +69,7 @@ updateScopeById:
     - http:
         path: /scopes/{scopeId}
         method: put
-        # cors: true
+        cors: true
+        authorizer:
+          type: CUSTOM
+          authorizerId: { Ref: Authorizer }

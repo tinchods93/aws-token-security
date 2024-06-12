@@ -41,10 +41,23 @@ import {
   ClientEntityInterface,
 } from './domain/entities/clientEntity/interfaces/clientEntityInterfaces';
 import ClientEntity from './domain/entities/clientEntity/clientEntity';
+import {
+  TOKEN_SERVICE_TOKEN,
+  TokenServiceInterface,
+} from './domain/services/tokenService/interfaces/tokenServiceInterfaces';
+import TokenService from './domain/services/tokenService/tokenService';
+import {
+  TOKEN_REPOSITORY_TOKEN,
+  TokenRepositoryInterface,
+} from './application/repositories/tokenRepository/interfaces/tokenRepositoryInterface';
+import TokenRepository from './application/repositories/tokenRepository/tokenRepository';
 
 // application ############################################################################################################
 
 // repositories
+depsContainer.register<TokenRepositoryInterface>(TOKEN_REPOSITORY_TOKEN, {
+  useClass: TokenRepository,
+});
 depsContainer.register<ScopeRepositoryInterface>(SCOPE_REPOSITORY_TOKEN, {
   useClass: ScopeRepository,
 });
@@ -58,6 +71,9 @@ depsContainer.register<ScopeServiceInterface>(SCOPE_SERVICE_TOKEN, {
 });
 depsContainer.register<ClientServiceInterface>(CLIENT_SERVICE_TOKEN, {
   useClass: ClientService,
+});
+depsContainer.register<TokenServiceInterface>(TOKEN_SERVICE_TOKEN, {
+  useClass: TokenService,
 });
 // entities
 depsContainer.register<ScopeEntityInterface>(SCOPE_ENTITY_TOKEN, {

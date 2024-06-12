@@ -1,0 +1,15 @@
+createToken:
+  handler: src/infrastructure/primary/handlers/tokens/createToken.handler
+  description: 'Create a new Token.'
+  name: ${file(resources/index.json):functions.createToken}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.createToken}
+  iamRoleStatements: ${file(resources/iamRoleStatements/createClient.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}
+  events:
+    - http:
+        path: /tokens
+        method: post
+        # cors: true

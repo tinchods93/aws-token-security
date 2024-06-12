@@ -1,4 +1,5 @@
 export enum ErrorMessagesEnum {
+  INVALID_CLIENT_DATA = 'Invalid client data',
   SCOPE_WITH_SAME_NAME = 'Scope with same name already exists. Please choose another name.',
   SCOPE_ALREADY_EXISTS = 'Scope already exists',
   SCOPE_NOT_FOUND = 'Scope not found',

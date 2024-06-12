@@ -9,7 +9,7 @@ export default class ScopeRepositoryException {
     return errorHandler.handle({
       ...input,
       status: input.status ?? StatusCodes.CONFLICT,
-      layer: ErrorLayersEnum.DOMAIN,
+      layer: ErrorLayersEnum.APPLICATION,
     });
   }
 }

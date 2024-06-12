@@ -58,11 +58,13 @@ export default class ClientService implements ClientServiceInterface {
     if (clientByApiName) {
       throw new Error(ErrorMessagesEnum.CLIENT_ALREADY_EXISTS);
     }
-    const tempClientSecret = randomUUID();
+
+    const tempClientSecret = client.client_secret ?? randomUUID();
 
     if (!client.client_secret) {
       client.client_secret = tempClientSecret;
     }
+
     // creamos el cliente
     const clientData = this.clientEntity.build(client);
     console.log(
