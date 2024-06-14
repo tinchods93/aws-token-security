@@ -8,8 +8,6 @@ import ValidateScopeAction from '../../../../application/actions/scopeActions/va
 export const handler = async (command: any, context: any) => {
   const action = depsContainer.resolve(ValidateScopeAction);
 
-  console.log('MARTIN_LOG=> handler', JSON.stringify({ command, context }));
-
   return commandMapper(
     { command, context },
     inputMode,

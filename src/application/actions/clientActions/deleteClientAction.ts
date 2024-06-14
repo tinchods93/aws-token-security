@@ -24,7 +24,6 @@ export default class DeleteClientAction implements ApplicationActionInterface {
 
   public execute = async (commandPayload: HandlerCommandType) => {
     try {
-      console.log('MARTIN_LOG=> action', JSON.stringify({ commandPayload }));
       const payload = new ZodSchemaValidation(
         deleteclientByIdInputSchema
       ).validate(commandPayload.parameters);

@@ -5,18 +5,9 @@ import { TokenServiceInterface } from './interfaces/tokenServiceInterfaces';
 
 export default class TokenService implements TokenServiceInterface {
   createToken(client: ClientType): string {
-    console.log(
-      'MARTIN_LOG=> TokenService -> createToken -> client',
-      JSON.stringify(client)
-    );
     // TODO: IMPLEMENTAR CACHEO DE TOKENS
     // eslint-disable-next-line camelcase, @typescript-eslint/no-unused-vars
     const { client_secret, ...clientData } = client;
-
-    console.log(
-      'MARTIN_LOG=> TokenService -> createToken -> clientData',
-      JSON.stringify(clientData)
-    );
 
     const currentTime = moment().tz('America/Argentina/Buenos_Aires');
 

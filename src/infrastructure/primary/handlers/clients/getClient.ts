@@ -9,8 +9,6 @@ import GetClientAction from '../../../../application/actions/clientActions/getCl
 export const handler = async (command: HandlerCommandType, context: any) => {
   const action = depsContainer.resolve(GetClientAction);
 
-  console.log('MARTIN_LOG=> handler', JSON.stringify({ command, context }));
-
   return commandMapper(
     { command, context },
     commandInput,

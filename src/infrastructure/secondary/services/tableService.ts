@@ -43,10 +43,6 @@ export default class TableService implements TableServiceInterface {
    * @throws {TableException} - Si ocurre un error al crear el elemento.
    */
   async create(data: CreateTableItemMethodInput) {
-    console.log(
-      'MARTIN_LOG=> TableService -> create -> data',
-      JSON.stringify(data)
-    );
     const model = new this.modelType(data);
     return model.save();
   }
@@ -91,11 +87,6 @@ export default class TableService implements TableServiceInterface {
         returnValues: 'ALL_NEW',
       })
     ).toJSON();
-
-    console.log(
-      'MARTIN_LOG=> TableService -> update -> response',
-      JSON.stringify(response)
-    );
 
     if (!response) return undefined;
 

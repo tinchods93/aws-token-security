@@ -79,12 +79,9 @@ class ClientEntity extends BasicEntity implements ClientEntityInterface {
   // }
 
   static addScope(client: ClientType | ClientTableItem, scope: string) {
-    console.log('MARTIN_LOG=> addScope-> client.scopes', client.scopes);
     const scopes = client.scopes.split(' ').filter((s) => s.trim() !== '');
-    console.log('MARTIN_LOG=> addScope-> scopes', scopes);
     if (!scopes.includes(scope)) {
       scopes.push(scope);
-      console.log('MARTIN_LOG=> addScope-> IF scopes', scopes);
       client.scopes = scopes.join(' ');
     }
     return client.scopes;
@@ -106,7 +103,6 @@ class ClientEntity extends BasicEntity implements ClientEntityInterface {
 
   static getClean(client: ClientTableItem): ClientType {
     const { pk, sk, type, ...cleanClient } = client;
-    console.log('MARTIN_LOG=> cleanClient', cleanClient);
     return cleanClient;
   }
 }

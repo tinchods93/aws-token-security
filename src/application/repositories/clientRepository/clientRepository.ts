@@ -41,10 +41,6 @@ export default class ClientRepository implements ClientRepositoryInterface {
       const response = await this.clientService.getClientById(params.clientId);
       return response;
     } catch (error) {
-      console.log(
-        'MARTIN_LOG=> ClientRepository -> getClientById -> error',
-        JSON.stringify(error)
-      );
       throw ClientRepositoryException.handle({
         message: error.message,
         code: ErrorCodesEnum.CLIENT_GET_BY_ID_FAILED,

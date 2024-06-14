@@ -20,16 +20,7 @@ import { ScopeRepositoryValidateScopeInput } from './types/scopeRepositoryTypes'
 export default class ScopeRepository implements ScopeRepositoryInterface {
   constructor(
     @inject(SCOPE_SERVICE_TOKEN) private scopeService: ScopeServiceInterface
-  ) {
-    console.log(
-      'MARTIN_LOG=> ScopeRepositoryConstructor',
-      JSON.stringify({ scopeService })
-    );
-    console.log(
-      'MARTIN_LOG=> ScopeRepositoryConstructor 2',
-      JSON.stringify(this)
-    );
-  }
+  ) {}
 
   async createScope(scope: ScopeInputType): Promise<ScopeTableItem> {
     try {
@@ -51,10 +42,6 @@ export default class ScopeRepository implements ScopeRepositoryInterface {
       const response = await this.scopeService.getScopeById(params.scopeId);
       return response;
     } catch (error) {
-      console.log(
-        'MARTIN_LOG=> ScopeRepository -> getScopeById -> error',
-        JSON.stringify(error)
-      );
       throw ScopeRepositoryException.handle({
         message: error.message,
         code: ErrorCodesEnum.SCOPE_GET_BY_ID_FAILED,

@@ -70,30 +70,17 @@ export default class ScopeService implements ScopeServiceInterface {
     scopeId: string,
     raw = false
   ): Promise<ScopeTableItem | ScopeType> {
-    console.log(
-      'MARTIN_LOG=> ScopeService -> getScopeById -> scopeId',
-      scopeId
-    );
-
     const response = await this.getAllScopes({
       scope_id: {
         eq: scopeId,
       },
     });
 
-    console.log(
-      'MARTIN_LOG=> ScopeService -> getScopeById -> response',
-      JSON.stringify(response)
-    );
     if (!response?.length) {
       throw new Error(ErrorMessagesEnum.SCOPE_NOT_FOUND);
     }
 
     const [item] = response;
-    console.log(
-      'MARTIN_LOG=> ScopeService -> getScopeById -> item',
-      JSON.stringify(item)
-    );
 
     return raw ? item : ScopeEntity.getClean(item);
   }
@@ -221,26 +208,15 @@ export default class ScopeService implements ScopeServiceInterface {
     scopesList: string,
     endpointData: EndpointDataType
   ): Promise<boolean> {
-    console.log(
-      'MARTIN_LOG=> ScopeService -> validateScopes -> scopesList',
-      JSON.stringify({ scopesList, endpointData })
-    );
     // Obtenemos todos los scopes
     const allScopes = await this.getAllScopes();
-    console.log(
-      'MARTIN_LOG=> ScopeService -> validateScopes -> allScopes',
-      JSON.stringify(allScopes)
-    );
+
     // Convertimos la lista de scopes en un array
     const scopesListArray = scopesList.split(' ');
 
     // Filtramos los scopes que coincidan con la lista de scopes
     const scopes = allScopes.filter((scope: ScopeTableItem) =>
       scopesListArray.includes(`${scope.scope_type}.${scope.api_name}`)
-    );
-    console.log(
-      'MARTIN_LOG=> ScopeService -> validateScopes -> scopes',
-      JSON.stringify({ scopes })
     );
 
     // Si no hay scopes, retornamos false
@@ -250,10 +226,6 @@ export default class ScopeService implements ScopeServiceInterface {
 
     // Obtenemos el endpoint
     const endpoint = `${endpointData.method} ${endpointData.endpoint}`;
-    console.log(
-      'MARTIN_LOG=> ScopeService -> validateScopes -> endpoint',
-      JSON.stringify({ endpoint })
-    );
 
     // Validamos si el endpoint está en alguno de los scopes
     return scopes.some((scope: ScopeTableItem) =>

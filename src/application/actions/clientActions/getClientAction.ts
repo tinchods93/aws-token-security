@@ -24,11 +24,6 @@ export default class GetClientAction implements ApplicationActionInterface {
 
   public execute = async (commandPayload: HandlerCommandType) => {
     try {
-      console.log(
-        'MARTIN_LOG=> commandPayload.query',
-        JSON.stringify(commandPayload.query)
-      );
-
       const payload = new ZodSchemaValidation(getclientInputSchema).validate(
         commandPayload.query
       );
@@ -42,8 +37,6 @@ export default class GetClientAction implements ApplicationActionInterface {
           message: 'You must provide either clientId or clientName',
         };
       }
-
-      console.log('MARTIN_LOG=> payload', JSON.stringify({ payload }));
 
       let response: any;
 

@@ -78,7 +78,6 @@ class ScopeEntity extends BasicEntity implements ScopeEntityInterface {
 
   static getClean(scope: ScopeTableItem): ScopeType {
     const { pk, sk, type, ...cleanScope } = scope;
-    console.log('MARTIN_LOG=> cleanScope', cleanScope);
     return cleanScope;
   }
 }

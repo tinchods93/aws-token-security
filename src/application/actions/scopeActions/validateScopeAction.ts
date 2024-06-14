@@ -24,11 +24,6 @@ export default class ValidateScopeAction implements ApplicationActionInterface {
 
   public execute = async (commandPayload: HandlerCommandType) => {
     try {
-      console.log(
-        'MARTIN_LOG=> commandPayload',
-        JSON.stringify(commandPayload)
-      );
-
       const payload = new ZodSchemaValidation(
         validateScopeInputSchema
       ).validate({
@@ -37,11 +32,8 @@ export default class ValidateScopeAction implements ApplicationActionInterface {
         ...commandPayload,
       });
 
-      console.log('MARTIN_LOG=> payload', JSON.stringify({ payload }));
-
       const response = await this.scopeRepository.validateScopes(payload);
 
-      console.log('MARTIN_LOG=> action response', JSON.stringify({ response }));
       return this.actionResponse.success({
         statusCode: StatusCodes.OK,
         data: {

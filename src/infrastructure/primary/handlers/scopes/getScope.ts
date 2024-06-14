@@ -8,8 +8,6 @@ import GetScopeAction from '../../../../application/actions/scopeActions/getScop
 export const handler = async (command: any, context: any) => {
   const action = depsContainer.resolve(GetScopeAction);
 
-  console.log('MARTIN_LOG=> handler', JSON.stringify({ command, context }));
-
   return commandMapper(
     { command, context },
     apiInputMode,

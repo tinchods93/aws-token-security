@@ -37,10 +37,6 @@ export default class ClientService implements ClientServiceInterface {
     private tableRepository: TableRepositoryInterface,
     @inject(CLIENT_ENTITY_TOKEN) private clientEntity: ClientEntityInterface
   ) {
-    console.log(
-      'MARTIN_LOG=> ClientService -> constructor -> tableName',
-      tableName
-    );
     this.tableService = tableRepository.getInstance(
       this.clientEntity.getTableSchema(),
       tableName
@@ -68,10 +64,7 @@ export default class ClientService implements ClientServiceInterface {
 
     // creamos el cliente
     const clientData = this.clientEntity.build(client);
-    console.log(
-      'MARTIN_LOG=> ClientService -> createClient -> clientData',
-      JSON.stringify(clientData)
-    );
+
     await this.tableService.create(clientData);
 
     return { ...clientData, client_secret: tempClientSecret };
@@ -81,28 +74,17 @@ export default class ClientService implements ClientServiceInterface {
     clientId: string,
     raw = false
   ): Promise<ClientTableItem | ClientType> {
-    console.log(
-      'MARTIN_LOG=> ClientService -> getClientById -> clientId',
-      clientId
-    );
     const response = await this.getAllClients({
       client_id: {
         eq: clientId,
       },
     });
-    console.log(
-      'MARTIN_LOG=> ClientService -> getClientById -> response',
-      JSON.stringify(response)
-    );
+
     if (!response?.length) {
       throw new Error(ErrorMessagesEnum.CLIENT_NOT_FOUND);
     }
 
     const [item] = response;
-    console.log(
-      'MARTIN_LOG=> ClientService -> getClientById -> item',
-      JSON.stringify(item)
-    );
 
     return raw ? item : ClientEntity.getClean(item);
   }

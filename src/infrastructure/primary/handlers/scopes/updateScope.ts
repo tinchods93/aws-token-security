@@ -9,8 +9,6 @@ import UpdateScopeAction from '../../../../application/actions/scopeActions/upda
 export const handler = async (command: HandlerCommandType, context: any) => {
   const action = depsContainer.resolve(UpdateScopeAction);
 
-  console.log('MARTIN_LOG=> handler', JSON.stringify({ command, context }));
-
   return commandMapper(
     { command, context },
     commandInput,

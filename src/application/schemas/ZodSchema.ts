@@ -11,16 +11,8 @@ export default class ZodSchemaValidation implements SchemaInterface {
 
   validate(payload: any): any {
     try {
-      console.log(
-        'MARTIN_LOG=> ZodSchemaValidation -> validate -> payload',
-        JSON.stringify(payload)
-      );
       return this.schema.parse(payload);
     } catch (error) {
-      console.log(
-        'MARTIN_LOG=> ZodSchemaValidation -> validate -> error',
-        JSON.stringify(error)
-      );
       const finalMessage = error.issues?.map(
         (issue: ZodIssue) => `${issue.message} -> ${issue.path.join('.')}`
       );
