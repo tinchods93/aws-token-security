@@ -13,6 +13,8 @@ import {
 } from '../../../domain/services/scopeService/interfaces/scopeServiceInterface';
 import ScopeRepositoryException from '../errors/scopeRepositoryException';
 import { ScopeRepositoryInterface } from './interfaces/scopeRepositoryInterface';
+import { GetScopeByApiNameServiceInput } from '../../../domain/services/scopeService/types/scopeServiceTypes';
+import { ScopeRepositoryValidateScopeInput } from './types/scopeRepositoryTypes';
 
 @injectable()
 export default class ScopeRepository implements ScopeRepositoryInterface {
@@ -63,11 +65,11 @@ export default class ScopeRepository implements ScopeRepositoryInterface {
     }
   }
 
-  async getScopeByApiName(params: { apiName: string }): Promise<ScopeType> {
+  async getScopeByApiName(
+    params: GetScopeByApiNameServiceInput
+  ): Promise<ScopeType> {
     try {
-      const response = await this.scopeService.getScopeByApiName(
-        params.apiName
-      );
+      const response = await this.scopeService.getScopeByApiName(params);
       return response;
     } catch (error) {
       throw ScopeRepositoryException.handle({
@@ -116,6 +118,27 @@ export default class ScopeRepository implements ScopeRepositoryInterface {
         payload: {
           scopeId,
         },
+        error,
+      });
+    }
+  }
+
+  async validateScopes(
+    params: ScopeRepositoryValidateScopeInput
+  ): Promise<boolean> {
+    try {
+      const { scopesList, endpointMethod, endpoint } = params;
+      const response = await this.scopeService.validateScopes(scopesList, {
+        method: endpointMethod,
+        endpoint,
+      });
+      return response;
+    } catch (error) {
+      throw ScopeRepositoryException.handle({
+        message: error.message,
+        code: ErrorCodesEnum.SCOPE_VALIDATION_FAILED,
+        status: error.status ?? StatusCodes.NOT_FOUND,
+        payload: params,
         error,
       });
     }

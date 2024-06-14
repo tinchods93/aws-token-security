@@ -9,10 +9,10 @@ import {
   SCOPE_REPOSITORY_TOKEN,
   ScopeRepositoryInterface,
 } from '../../repositories/scopeRepository/interfaces/scopeRepositoryInterface';
-import { getScopeInputSchema } from '../../schemas/zodSchemas/scopeActions/getScopeInputSchema';
+import { validateScopeInputSchema } from '../../schemas/zodSchemas/scopeActions/validateScopeInputSchema';
 
 @injectable()
-export default class GetScopeAction implements ApplicationActionInterface {
+export default class ValidateScopeAction implements ApplicationActionInterface {
   private actionResponse: ActionResponseInterface;
 
   constructor(
@@ -29,35 +29,25 @@ export default class GetScopeAction implements ApplicationActionInterface {
         JSON.stringify(commandPayload)
       );
 
-      const payload = new ZodSchemaValidation(getScopeInputSchema).validate({
+      const payload = new ZodSchemaValidation(
+        validateScopeInputSchema
+      ).validate({
         ...commandPayload.query,
         ...commandPayload.body,
         ...commandPayload,
       });
 
-      if (
-        (!payload.scopeId && !payload.apiName) ||
-        (payload.scopeId && payload.apiName)
-      ) {
-        throw {
-          status: StatusCodes.BAD_REQUEST,
-          message: 'You must provide either scopeId or apiName',
-        };
-      }
-
       console.log('MARTIN_LOG=> payload', JSON.stringify({ payload }));
 
-      let response: any;
+      const response = await this.scopeRepository.validateScopes(payload);
 
-      if (payload.scopeId) {
-        response = await this.scopeRepository.getScopeById(payload);
-      } else if (payload.apiName) {
-        response = await this.scopeRepository.getScopeByApiName(payload);
-      }
-
+      console.log('MARTIN_LOG=> action response', JSON.stringify({ response }));
       return this.actionResponse.success({
         statusCode: StatusCodes.OK,
-        data: response,
+        data: {
+          status: 'success',
+          scopesIs: response,
+        },
       });
     } catch (error) {
       return this.actionResponse.error({

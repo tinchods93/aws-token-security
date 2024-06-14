@@ -24,6 +24,7 @@ import {
   ClientUpdatePayload,
 } from '../../entities/clientEntity/types/clientEntityTypes';
 import ClientEntity from '../../entities/clientEntity/clientEntity';
+import { getAllClientsInputType } from './types/clientServiceTypes';
 
 const tableName = process.env.CLIENTS_SCOPE_TABLE_NAME as string;
 
@@ -84,23 +85,11 @@ export default class ClientService implements ClientServiceInterface {
       'MARTIN_LOG=> ClientService -> getClientById -> clientId',
       clientId
     );
-    const response = await this.tableService
-      .query({
-        query: {
-          type: {
-            eq: EntitiesEnum.CLIENT,
-          },
-          client_id: {
-            eq: clientId,
-          },
-        },
-        options: {
-          using_index: TableGsiEnum.TYPE,
-        },
-      })
-      .catch(() => {
-        return [];
-      });
+    const response = await this.getAllClients({
+      client_id: {
+        eq: clientId,
+      },
+    });
     console.log(
       'MARTIN_LOG=> ClientService -> getClientById -> response',
       JSON.stringify(response)
@@ -122,17 +111,9 @@ export default class ClientService implements ClientServiceInterface {
     clientName: string,
     raw = false
   ): Promise<ClientTableItem | ClientType> {
-    const response = await this.tableService.query({
-      query: {
-        type: {
-          eq: EntitiesEnum.CLIENT,
-        },
-        client_name: {
-          eq: clientName,
-        },
-      },
-      options: {
-        using_index: TableGsiEnum.TYPE,
+    const response = await this.getAllClients({
+      client_name: {
+        eq: clientName,
       },
     });
 
@@ -143,6 +124,28 @@ export default class ClientService implements ClientServiceInterface {
     const [item] = response;
 
     return raw ? item : ClientEntity.getClean(item);
+  }
+
+  async getAllClients(
+    query?: getAllClientsInputType
+  ): Promise<ClientTableItem[]> {
+    const response = await this.tableService.query({
+      query: {
+        type: {
+          eq: EntitiesEnum.CLIENT,
+        },
+        ...(query && query),
+      },
+      options: {
+        using_index: TableGsiEnum.TYPE,
+      },
+    });
+
+    if (!response?.length) {
+      throw new Error(ErrorMessagesEnum.CLIENT_NOT_FOUND);
+    }
+
+    return response;
   }
 
   async deleteClientById(clientId: string): Promise<ClientTableItem> {

@@ -5,6 +5,7 @@
         "getScope": "${self:custom.stackPrefix}-getScope",
         "deleteScopeById": "${self:custom.stackPrefix}-deleteScopeById",
         "updateScopeById": "${self:custom.stackPrefix}-updateScopeById",
+        "validateScope": "${self:custom.stackPrefix}-validateScope",
         "createClient": "${self:custom.stackPrefix}-createClient",
         "getClient": "${self:custom.stackPrefix}-getClient",
         "deleteClientById": "${self:custom.stackPrefix}-deleteClientById",

@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import jwt from 'jsonwebtoken';
 import { ClientType } from '../../entities/clientEntity/types/clientEntityTypes';
 import { TokenServiceInterface } from './interfaces/tokenServiceInterfaces';
@@ -16,6 +17,13 @@ export default class TokenService implements TokenServiceInterface {
       'MARTIN_LOG=> TokenService -> createToken -> clientData',
       JSON.stringify(clientData)
     );
+
+    const currentTime = moment().tz('America/Argentina/Buenos_Aires');
+
+    const expirationInUTC3 = currentTime.clone().add(10, 'hours');
+
+    const expiresIn = expirationInUTC3.diff(moment(), 'seconds');
+
     const token = jwt.sign(
       {
         client: {
@@ -27,7 +35,7 @@ export default class TokenService implements TokenServiceInterface {
       },
       process.env.JWT_SECRET as string,
       {
-        expiresIn: process.env.JWT_EXPIRATION_TIME as string,
+        expiresIn: expiresIn,
       }
     );
     return token;

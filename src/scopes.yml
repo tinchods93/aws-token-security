@@ -73,3 +73,14 @@ updateScopeById:
         authorizer:
           type: CUSTOM
           authorizerId: { Ref: Authorizer }
+
+validateScope:
+  handler: src/infrastructure/primary/handlers/scopes/validateScope.handler
+  description: 'Validates a scope.'
+  name: ${file(resources/index.json):functions.validateScope}
+  timeout: 25
+  logRetentionInDays: 14
+  iamRoleStatementsInherit: true
+  iamRoleStatementsName: ${file(resources/index.json):functions.validateScope}
+  iamRoleStatements: ${file(resources/iamRoleStatements/validateScope.yml)}
+  provisionedConcurrency: ${self:custom.provisionedConcurrency.${self:provider.stage}, 0}

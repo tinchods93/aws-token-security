@@ -1,19 +1,19 @@
 import 'reflect-metadata';
-import apiInputMode from 'rebased/handler/input/commandApi';
-import apiOutputMode from 'rebased/handler/output/commandApi';
+import inputMode from 'rebased/handler/input/commandInvoke';
+import outputMode from 'rebased/handler/output/commandInvoke';
 import { commandMapper } from 'rebased/handler';
 import depsContainer from '../../../../depsContainer';
-import GetScopeAction from '../../../../application/actions/scopeActions/getScopeAction';
+import ValidateScopeAction from '../../../../application/actions/scopeActions/validateScopeAction';
 
 export const handler = async (command: any, context: any) => {
-  const action = depsContainer.resolve(GetScopeAction);
+  const action = depsContainer.resolve(ValidateScopeAction);
 
   console.log('MARTIN_LOG=> handler', JSON.stringify({ command, context }));
 
   return commandMapper(
     { command, context },
-    apiInputMode,
+    inputMode,
     action.execute,
-    apiOutputMode
+    outputMode
   );
 };

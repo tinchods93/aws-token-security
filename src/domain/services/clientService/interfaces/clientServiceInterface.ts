@@ -4,6 +4,7 @@ import {
   ClientType,
   ClientUpdatePayload,
 } from '../../../entities/clientEntity/types/clientEntityTypes';
+import { getAllClientsInputType } from '../types/clientServiceTypes';
 
 export const CLIENT_SERVICE_TOKEN = Symbol('ClientServiceInterface');
 
@@ -17,6 +18,7 @@ export interface ClientServiceInterface {
     clientName: string,
     raw?: boolean
   ): Promise<ClientTableItem | ClientType>;
+  getAllClients(query?: getAllClientsInputType): Promise<ClientTableItem[]>;
   updateClientById(
     clientId: string,
     payload: ClientUpdatePayload

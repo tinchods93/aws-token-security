@@ -22,6 +22,12 @@ import {
 import { ErrorMessagesEnum } from '../../../commons/errors/enums/errorMessagesEnum';
 import { ScopeServiceInterface } from './interfaces/scopeServiceInterface';
 import { UpdateOperationsEnum } from './enums/updateOperationsEnum';
+import {
+  EndpointDataType,
+  GetAllScopesType,
+  GetScopeByApiNameServiceInput,
+} from './types/scopeServiceTypes';
+import matchPaths from '../../utils/matchPaths';
 
 const tableName = process.env.CLIENTS_SCOPE_TABLE_NAME as string;
 
@@ -42,10 +48,11 @@ export default class ScopeService implements ScopeServiceInterface {
 
   async createScope(scope: ScopeInputType): Promise<ScopeTableItem> {
     // buscamos el scope por api_name
-    const scopeByApiName = await this.getScopeByApiName(
-      scope.api_name,
-      true
-    ).catch(() => {
+    const scopeByApiName = await this.getScopeByApiName({
+      apiName: scope.api_name,
+      scopeType: scope.scope_type,
+      raw: true,
+    }).catch(() => {
       return null;
     });
     // si existe un scope con el mismo api_name, lanzamos un error
@@ -67,23 +74,13 @@ export default class ScopeService implements ScopeServiceInterface {
       'MARTIN_LOG=> ScopeService -> getScopeById -> scopeId',
       scopeId
     );
-    const response = await this.tableService
-      .query({
-        query: {
-          type: {
-            eq: EntitiesEnum.SCOPE,
-          },
-          scope_id: {
-            eq: scopeId,
-          },
-        },
-        options: {
-          using_index: TableGsiEnum.TYPE,
-        },
-      })
-      .catch(() => {
-        return [];
-      });
+
+    const response = await this.getAllScopes({
+      scope_id: {
+        eq: scopeId,
+      },
+    });
+
     console.log(
       'MARTIN_LOG=> ScopeService -> getScopeById -> response',
       JSON.stringify(response)
@@ -102,26 +99,16 @@ export default class ScopeService implements ScopeServiceInterface {
   }
 
   async getScopeByApiName(
-    apiName: string,
-    raw = false
+    params: GetScopeByApiNameServiceInput
   ): Promise<ScopeTableItem | ScopeType> {
-    const response = await this.tableService.query({
-      query: {
-        type: {
-          eq: EntitiesEnum.SCOPE,
-        },
-        api_name: {
-          eq: apiName,
-        },
-      },
-      options: {
-        using_index: TableGsiEnum.TYPE,
-      },
-    });
+    const { raw = false, apiName, scopeType } = params;
 
-    if (!response?.length) {
-      throw new Error(ErrorMessagesEnum.SCOPE_NOT_FOUND);
-    }
+    const response = await this.getAllScopes({
+      api_name: {
+        eq: apiName,
+      },
+      ...(scopeType && { scope_type: { eq: scopeType } }),
+    });
 
     const [item] = response;
 
@@ -149,9 +136,9 @@ export default class ScopeService implements ScopeServiceInterface {
 
     if (inputPayload.api_name) {
       // buscamos el scope por api_name
-      const scopeByApiName = await this.getScopeByApiName(
-        inputPayload.api_name
-      ).catch(() => {
+      const scopeByApiName = await this.getScopeByApiName({
+        apiName: inputPayload.api_name,
+      }).catch(() => {
         return null;
       });
       // si existe un scope con el mismo api_name, lanzamos un error
@@ -208,5 +195,71 @@ export default class ScopeService implements ScopeServiceInterface {
     });
 
     return updatedScope;
+  }
+
+  async getAllScopes(query?: GetAllScopesType): Promise<ScopeTableItem[]> {
+    const response = await this.tableService.query({
+      query: {
+        type: {
+          eq: EntitiesEnum.SCOPE,
+        },
+        ...(query && query),
+      },
+      options: {
+        using_index: TableGsiEnum.TYPE,
+      },
+    });
+
+    if (!response?.length) {
+      throw new Error(ErrorMessagesEnum.SCOPE_NOT_FOUND);
+    }
+
+    return response;
+  }
+
+  async validateScopes(
+    scopesList: string,
+    endpointData: EndpointDataType
+  ): Promise<boolean> {
+    console.log(
+      'MARTIN_LOG=> ScopeService -> validateScopes -> scopesList',
+      JSON.stringify({ scopesList, endpointData })
+    );
+    // Obtenemos todos los scopes
+    const allScopes = await this.getAllScopes();
+    console.log(
+      'MARTIN_LOG=> ScopeService -> validateScopes -> allScopes',
+      JSON.stringify(allScopes)
+    );
+    // Convertimos la lista de scopes en un array
+    const scopesListArray = scopesList.split(' ');
+
+    // Filtramos los scopes que coincidan con la lista de scopes
+    const scopes = allScopes.filter((scope: ScopeTableItem) =>
+      scopesListArray.includes(`${scope.scope_type}.${scope.api_name}`)
+    );
+    console.log(
+      'MARTIN_LOG=> ScopeService -> validateScopes -> scopes',
+      JSON.stringify({ scopes })
+    );
+
+    // Si no hay scopes, retornamos false
+    if (!scopes?.length) {
+      return false;
+    }
+
+    // Obtenemos el endpoint
+    const endpoint = `${endpointData.method} ${endpointData.endpoint}`;
+    console.log(
+      'MARTIN_LOG=> ScopeService -> validateScopes -> endpoint',
+      JSON.stringify({ endpoint })
+    );
+
+    // Validamos si el endpoint está en alguno de los scopes
+    return scopes.some((scope: ScopeTableItem) =>
+      scope.endpoints.some((scopeEndpoint) => {
+        return matchPaths(scopeEndpoint, endpoint);
+      })
+    );
   }
 }
